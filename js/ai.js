@@ -11,12 +11,13 @@ function AI(grid) {
   return edgeScore + bonuses * 2;
 };*/
 AI.prototype.evaluation = function () {
-  var bonuses = this.grid.availableCells().length;
+  //var bonuses = this.grid.availableCells().length;
   var edgeScore = 0;
-  /*if(this.grid.largestTileInEdge()) {
-    edgeScore = 100;
-  }*/
-  return this.grid.monotonicity() + bonuses + edgeScore + this.grid.smoothness();
+  if(this.grid.largestTileInEdge()) {
+    edgeScore = 10000;
+  }
+  return edgeScore + bonuses;
+  //return this.grid.monotonicity() * 2 + bonuses + edgeScore + this.grid.smoothness();
 };
 
 //minimax search with alpha-beta pruning:
@@ -106,5 +107,5 @@ AI.prototype.minimax = function(alpha, beta, depth, player) {
 
 
 AI.prototype.nextMove = function() {
-  return this.minimax(-Infinity, Infinity, 5, this.grid.playerTurn);
+  return this.minimax(-Infinity, Infinity, 4, this.grid.playerTurn);
 };

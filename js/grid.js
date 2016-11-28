@@ -416,10 +416,12 @@ Grid.prototype.findMax = function() {
 //check if the largest tile is in the lower right corner:
 Grid.prototype.largestTileInEdge = function () {
   var max = this.findMax();
-  var result = false;
   //return (this.indexes[0][0] == max || this.indexes[0][3] == max || this.indexes[3][0] == max || this.indexes[3][3] == max)
-  if(this.cellContent(this.indexes[3][3]).value === max) {
-    result = true;
+  var result = false;
+  if(this.cellOccupied(this.indexes[3][3])) {
+    if(this.cellContent(this.indexes[3][3]).value == max) {
+      result = true;
+    }
   }
   return result;
 };
