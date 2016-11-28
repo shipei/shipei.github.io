@@ -418,8 +418,8 @@ Grid.prototype.largestTileInEdge = function () {
   var max = this.findMax();
   //return (this.indexes[0][0] == max || this.indexes[0][3] == max || this.indexes[3][0] == max || this.indexes[3][3] == max)
   var result = false;
-  if(this.cellOccupied(this.indexes[3][3])) {
-    if(this.cellContent(this.indexes[3][3]).value == max) {
+  if(this.cellOccupied(this.indexes[0][0])) {
+    if(this.cellContent(this.indexes[0][0]).value == max) {
       result = true;
     }
   }

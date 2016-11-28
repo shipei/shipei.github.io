@@ -10,14 +10,15 @@ function AI(grid) {
   var bonuses = this.grid.availableCells().length;
   return edgeScore + bonuses * 2;
 };*/
+
 AI.prototype.evaluation = function () {
-  //var bonuses = this.grid.availableCells().length;
+  var bonuses = this.grid.availableCells().length;
   var edgeScore = 0;
   if(this.grid.largestTileInEdge()) {
-    edgeScore = 10000;
+    edgeScore = 100000;
   }
-  return edgeScore + bonuses;
-  //return this.grid.monotonicity() * 2 + bonuses + edgeScore + this.grid.smoothness();
+  //return edgeScore + bonuses * 2;
+  return this.grid.monotonicity() + bonuses + edgeScore + this.grid.smoothness() * 0.5;
 };
 
 //minimax search with alpha-beta pruning:
@@ -42,7 +43,7 @@ AI.prototype.minimax = function(alpha, beta, depth, player) {
     //player's turn:
     if(player == this.grid.playerTurn) {
       bestEval = alpha;
-      for(var direction in [1, 2, 3, 4]) {
+      for(var direction in [0, 1, 2, 3]) {
         var newGrid = this.grid.clone();
         if(newGrid.move(direction).moved) {
           var newAI = new AI(newGrid);
@@ -71,7 +72,7 @@ AI.prototype.minimax = function(alpha, beta, depth, player) {
     else {
       bestEval = beta;
       //var list = [2, 4];
-      //var worstScores = [];
+      //var worstScores = []
       var possibleScores = [];
       var cells = this.grid.availableCells();
       //put 2 and 4 in each empty cell and evaluate the values and find the worst one:
@@ -107,5 +108,5 @@ AI.prototype.minimax = function(alpha, beta, depth, player) {
 
 
 AI.prototype.nextMove = function() {
-  return this.minimax(-Infinity, Infinity, 4, this.grid.playerTurn);
+  return this.minimax(-Infinity, Infinity, 3, this.grid.playerTurn);
 };
