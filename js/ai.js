@@ -32,12 +32,12 @@ AI.prototype.minimax = function(alpha, beta, depth, player) {
     //player's turn:
     if(player == this.grid.playerTurn) {
       bestEval = -Infinity;
-      for(var direction in [1, 2, 3]) {
+      for(var direction in [0, 1, 2, 3]) {
         var newGrid = this.grid.clone();
         if(newGrid.move(direction).moved) {
-          if(newGrid.isGamePaused()) {
-            return {eval: Infinity, move: 3};
-          }
+          /*if(newGrid.isGamePaused()) {
+            return {eval: Infinity, move: 0};
+          }*/
           //if(newGrid.isGameTerminated()) {
             if(newGrid.hasWon()) {
               return {eval: Infinity, move: direction};
