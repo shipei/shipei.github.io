@@ -183,9 +183,6 @@ Grid.prototype.move = function (direction) {
       tile = self.cellContent(cell);
 
       if (tile) {
-        //if (debug) {
-          //console.log('tile @', x, y);
-        //}
         var positions = self.findFarthestPosition(cell, vector);
         var next      = self.cellContent(positions.next);
 
@@ -208,10 +205,6 @@ Grid.prototype.move = function (direction) {
             won = true;
           }
         } else {
-          //if (debug) {
-            //console.log(cell);
-            //console.log(tile);
-          //}
           self.moveTile(tile, positions.farthest);
         }
 
@@ -223,14 +216,6 @@ Grid.prototype.move = function (direction) {
       }
     });
   });
-
-  //console.log('returning, playerturn is', self.playerTurn);
-  //if (!moved) {
-    //console.log('cell', cell);
-    //console.log('tile', tile);
-    //console.log('direction', direction);
-    //console.log(this.toString());
-  //}
   return {moved: moved, score: score, won: won};
 };
 
@@ -316,8 +301,8 @@ Grid.prototype.positionsEqual = function (first, second) {
 // between neighboring tiles (in log space, so it represents the
 // number of merges that need to happen before they can merge).
 // Note that the pieces can be distant
-Grid.prototype.smoothness = function() {
-  var smoothness = 0;
+Grid.prototype.clustering = function() {
+  var clustering = 0;
   for (var x=0; x<4; x++) {
     for (var y=0; y<4; y++) {
       if ( this.cellOccupied( this.indexes[x][y] )) {
@@ -329,13 +314,13 @@ Grid.prototype.smoothness = function() {
           if (this.cellOccupied(targetCell)) {
             var target = this.cellContent(targetCell);
             var targetValue = Math.log(target.value) / Math.log(2);
-            smoothness -= Math.abs(value - targetValue);
+            clustering -= Math.abs(value - targetValue);
           }
         }
       }
     }
   }
-  return smoothness;
+  return clustering;
 }
 
 // measures how monotonic the grid is. This means the values of the tiles are strictly increasing
@@ -427,34 +412,28 @@ Grid.prototype.largestTileInEdge = function () {
 };
 
 //check if the game is over
-Grid.prototype.isGameTerminated = function () {
+Grid.prototype.isGamePaused = function () {
   var terminated = false;
-  if(this.move.won) {
+  var newGrid = this.clone();
+  if((!newGrid.move(1).moved) && (!newGrid.move(2).moved) && (!newGrid.move(3).moved)) {
     terminated = true;
-  }
-  else {
-    if(this.availableCells().length == 0) {
-      var newGrid = this.clone();
-      if(newGrid.move(0).score == 0 && newGrid.move(1).score == 0 && newGrid.move(2).score == 0 && newGrid.move(3).score == 0) {
-        terminated = true;
-      }
-    }
   }
   return terminated;
 };
 
 Grid.prototype.hasWon = function() {
-  if(score < 18432) {
+  /*if(score < 18432) {
     return false;
-  }
+  }*/
+  var self = this;
   for (var x=0; x<4; x++) {
     for (var y=0; y<4; y++) {
-      if (this.cellOccupied(this.indexes[x][y])) {
-        if (this.cellContent(this.indexes[x][y]).value == 2048) {
+      if (self.cellOccupied(this.indexes[x][y])) {
+        if (self.cellContent(this.indexes[x][y]).value == 2048) {
           return true;
         }
       }
     }
   }
   return false;
-}
+};

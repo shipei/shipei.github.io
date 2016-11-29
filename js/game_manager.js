@@ -11,7 +11,7 @@ function GameManager(size, InputManager, Actuator) {
   this.inputManager.on('run', function() {
     if (this.running) {
       this.running = false;
-      this.actuator.setRunButton('this is magic');
+      this.actuator.setRunButton('auto run');
     } else {
       this.running = true;
       this.run()
@@ -26,7 +26,7 @@ function GameManager(size, InputManager, Actuator) {
 GameManager.prototype.restart = function () {
   this.actuator.restart();
   this.running = false;
-  this.actuator.setRunButton('this is magic');
+  this.actuator.setRunButton('auto run');
   this.setup();
 };
 

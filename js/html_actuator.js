@@ -123,25 +123,6 @@ HTMLActuator.prototype.clearMessage = function () {
   this.messageContainer.classList.remove("game-won", "game-over");
 };
 
-HTMLActuator.prototype.scoreTweetButton = function () {
-  var tweet = document.createElement("a");
-  tweet.classList.add("twitter-share-button");
-  tweet.setAttribute("href", "https://twitter.com/share");
-  tweet.setAttribute("data-via", "gabrielecirulli");
-  tweet.textContent = "Tweet";
-
-  var text = "I scored " + this.score + " points at 2048, a game where you " +
-             "join numbers to score high! #2048game #2048ai";
-  tweet.setAttribute("data-text", text);
-
-  return tweet;
-};
-
-
-HTMLActuator.prototype.showHint = function(hint) {
-  document.getElementById('feedback-container').innerHTML = ['↑','→','↓','←'][hint];
-}
-
 HTMLActuator.prototype.setRunButton = function(message) {
   document.getElementById('run-button').innerHTML = message;
 }

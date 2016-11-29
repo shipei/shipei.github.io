@@ -68,7 +68,6 @@ KeyboardInputManager.prototype.listen = function () {
     self.emit('run')
   })
 
-
   // Listen to swipe events
   var gestures = [Hammer.DIRECTION_UP, Hammer.DIRECTION_RIGHT,
                   Hammer.DIRECTION_DOWN, Hammer.DIRECTION_LEFT];
