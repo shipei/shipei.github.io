@@ -7,45 +7,45 @@ AI.prototype.evaluation = function() {
   var max = this.grid.findMax();
   var edgeScore = 0;
   if(this.grid.largestTileInEdge()) {
-    edgeScore = 100000;
+    edgeScore = 1;
   }
-  return this.grid.clustering() * 5 + this.grid.monotonicity() + Math.log(emptyCells) * 3 + (Math.log(max) / Math.log(2));
+  var result = emptyCells * 2 + edgeScore * 100;
+  //console.log(emptyCells + " " + edgeScore);
+  //console.log(result);
+  return result;
 };
 
-//minimax search with alpha-beta pruning:
+//improvement:
+/*AI.prototype.evaluation = function() {
+  var emptyCells = this.grid.availableCells().length;
+  var max = this.grid.findMax();
+  var edgeScore = 0;
+  if(this.grid.largestTileInEdge()) {
+    edgeScore = 1;
+  }
+  var result = emptyCells * 2 + edgeScore * 100 + this.grid.monotonicity();
+  return result;
+};
+*/
+//min max search with alpha-beta pruning:
 AI.prototype.minimax = function(alpha, beta, depth, player) {
   var bestEval;
   var bestMove = -1;
-  var directions = [1, 2, 3, 0];
+  var directions = [0, 1, 2, 3];
   var result;
-  /*if(this.grid.isGameTerminated()) {
-    if(this.gird.hasWon()) {
-      //bestEval = Infinity;
-      return {eval: Infinity, move: bestMove};
-    }
-  }*/
-  /*else if(depth == 0) {
-    //bestEval = this.evaluation();
-    return {eval: this.evaluation(), move: bestMove};
-  }*/
-  //else {
     //player's turn:
     if(player == this.grid.playerTurn) {
       bestEval = -Infinity;
-      for(var direction in [0, 1, 2, 3]) {
+      for(var direction in directions) {
         var newGrid = this.grid.clone();
         if(newGrid.move(direction).moved) {
-          /*if(newGrid.isGamePaused()) {
-            return {eval: Infinity, move: 0};
-          }*/
-          //if(newGrid.isGameTerminated()) {
             if(newGrid.hasWon()) {
               return {eval: Infinity, move: direction};
             }
-          //}
           var newAI = new AI(newGrid);
           if(depth == 0) {
-            return {eval: newAI.evaluation(), move: direction};
+            console.log("eval: " + newAI.evaluation() + "move: " + direction);
+            result = {eval: newAI.evaluation(), move: direction};
           }
           else {
             result = newAI.minimax(alpha, beta, depth-1, false);
@@ -61,9 +61,9 @@ AI.prototype.minimax = function(alpha, beta, depth, player) {
           }
         }
       }
-      if(newGrid.isGamePaused()) {
+      /*if(newGrid.isGamePaused()) {
         return {eval: Infinity, move: 3};
-      }
+      }*/
       bestEval = alpha;
     }
     //computer's turn:
@@ -106,4 +106,11 @@ AI.prototype.minimax = function(alpha, beta, depth, player) {
 
 AI.prototype.nextMove = function() {
   return this.minimax(-Infinity, Infinity, 5, true);
+  /*if(this.gird.isGamePaused()) {
+    return {eval: Infinity, move: 3};
+  }
+  else {
+    return res;
+  }*/
+  return res;
 };

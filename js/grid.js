@@ -296,13 +296,9 @@ Grid.prototype.positionsEqual = function (first, second) {
   return first.x === second.x && first.y === second.y;
 };
 
-// measures how smooth the grid is (as if the values of the pieces
-// were interpreted as elevations). Sums of the pairwise difference
-// between neighboring tiles (in log space, so it represents the
-// number of merges that need to happen before they can merge).
-// Note that the pieces can be distant
-Grid.prototype.clustering = function() {
-  var clustering = 0;
+
+Grid.prototype.smoothness = function() {
+  var smoothness = 0;
   for (var x=0; x<4; x++) {
     for (var y=0; y<4; y++) {
       if ( this.cellOccupied( this.indexes[x][y] )) {
@@ -310,26 +306,21 @@ Grid.prototype.clustering = function() {
         for (var direction=1; direction<=2; direction++) {
           var vector = this.getVector(direction);
           var targetCell = this.findFarthestPosition(this.indexes[x][y], vector).next;
-
           if (this.cellOccupied(targetCell)) {
             var target = this.cellContent(targetCell);
             var targetValue = Math.log(target.value) / Math.log(2);
-            clustering -= Math.abs(value - targetValue);
+            smoothness -= Math.abs(value - targetValue);
           }
         }
       }
     }
   }
-  return clustering;
-}
+  return smoothness;
+};
 
-// measures how monotonic the grid is. This means the values of the tiles are strictly increasing
-// or decreasing in both the left/right and up/down directions
 Grid.prototype.monotonicity = function() {
   // scores for all four directions
   var totals = [0, 0, 0, 0];
-
-  // up/down direction
   for (var x=0; x<4; x++) {
     var current = 0;
     var next = current+1;
@@ -353,8 +344,6 @@ Grid.prototype.monotonicity = function() {
       next++;
     }
   }
-
-  // left/right direction
   for (var y=0; y<4; y++) {
     var current = 0;
     var next = current+1;
@@ -380,7 +369,7 @@ Grid.prototype.monotonicity = function() {
   }
 
   return Math.max(totals[0], totals[1]) + Math.max(totals[2], totals[3]);
-}
+};
 
 //find the largest tile in grid:
 Grid.prototype.findMax = function() {
@@ -408,6 +397,7 @@ Grid.prototype.largestTileInEdge = function () {
       result = true;
     }
   }
+  console.log(result);
   return result;
 };
 
@@ -415,9 +405,10 @@ Grid.prototype.largestTileInEdge = function () {
 Grid.prototype.isGamePaused = function () {
   var terminated = false;
   var newGrid = this.clone();
-  if((!newGrid.move(1).moved) && (!newGrid.move(2).moved) && (!newGrid.move(3).moved)) {
+  if((!newGrid.move(0).moved) && (!newGrid.move(2).moved) && (!newGrid.move(3).moved)) {
     terminated = true;
   }
+  //console.log(terminated);
   return terminated;
 };
 
